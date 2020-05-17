@@ -1,0 +1,21 @@
+{
+  "name": "crop-image",
+  "version": "1.0.0",
+  "description": "Crop and send image to s3",
+  "main": "app.js",
+  "repository": "https://bitbucket.org/aircall/crop-image",
+  "author": "<arnaud.beun@aircall.io>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "aws-sdk": "^2.662.0",
+    "busboy": "^0.3.1",
+    "sharp": "^0.25.2"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0"
+  },
+  "scripts": {
+    "deploy": "serverless deploy"
+  }
+}

@@ -1,0 +1,54 @@
+service: ayoub-dynamic-image-resizing-bucket
+
+custom:
+  secrets: ${file(../secrets/secrets.json)} # will be created in our deploy.sh script
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${env:STAGE, 'dev'}
+  profile: serverless-ayoub # or change to 'default'
+  region: eu-west-3
+  environment:
+    S3_BUCKET: ${env:S3_BUCKET}
+
+resources:
+  Resources:
+    AyoubDynamicImageResizing:
+      Type: AWS::S3::Bucket # creating an S3 Bucket
+      Properties:
+        AccessControl: PublicReadWrite
+        BucketName: ${env:S3_BUCKET}
+        WebsiteConfiguration: # enabling the static website option
+          ErrorDocument: error.html
+          IndexDocument: index.html
+          RoutingRules: # telling it to redirect for every 404 error
+            - 
+              RedirectRule:
+                HostName: ${self:custom.secrets.DOMAIN} # API Gateway domain
+                HttpRedirectCode: "307" # temporary redirect HTTP code
+                Protocol: "https"
+                ReplaceKeyPrefixWith: "${self:provider.stage}/image?key=" # route
+              RoutingRuleCondition:
+                HttpErrorCodeReturnedEquals: "404"
+                KeyPrefixEquals: ""
+    AyoubDynamicImageResizingPolicy:
+      Type: AWS::S3::BucketPolicy # add policy for public read access
+      Properties: 
+        Bucket: 
+          Ref: AyoubDynamicImageResizing
+        PolicyDocument: 
+          Statement: 
+            - 
+              Action: 
+                - "s3:*"
+              Effect: "Allow"
+              Resource:
+                Fn::Join: 
+                  - ""
+                  - 
+                    - "arn:aws:s3:::"
+                    - 
+                      Ref: AyoubDynamicImageResizing
+                    - "/*"
+              Principal: "*"

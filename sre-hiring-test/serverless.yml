@@ -1,0 +1,44 @@
+service: ayoub-dynamic-image-resizing-function
+
+plugins:
+  - serverless-plugin-tracing
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${env:STAGE, 'dev'}
+  profile: serverless-ayoub
+  tracing: true
+  region: ${env:REGION, 'eu-west-3'}
+  apiGateway:
+    binaryMediaTypes:
+    - '*/*'
+  logs:
+    restApi:
+      level: ERROR
+  environment:
+    S3_BUCKET: ${env:S3_BUCKET}
+    REGION: ${env:REGION}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:ListBucket"
+      Resource: "arn:aws:s3:::${env:S3_BUCKET}"
+    - Effect: "Allow"
+      Action:
+        - "s3:PutObject"
+      Resource: "arn:aws:s3:::${env:S3_BUCKET}"
+    - Effect: "Allow"
+      Action:
+        - "xray:PutTraceSegments"
+        - "xray:PutTelemetryRecords"
+      Resource:
+        - "*"
+
+functions:
+  image:
+    handler: app.lambdaHandler
+    events:
+      - http:
+          path: image
+          method: post
