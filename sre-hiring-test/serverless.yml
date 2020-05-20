@@ -2,13 +2,16 @@ service: ayoub-dynamic-image-resizing-function
 
 plugins:
   - serverless-plugin-tracing
+  - serverless-plugin-datadog
 
 provider:
   name: aws
   runtime: nodejs12.x
   stage: ${env:STAGE, 'dev'}
   profile: serverless-ayoub
-  tracing: true
+  tracing:
+    lambda: true
+    apiGateway: true
   region: ${env:REGION, 'eu-west-3'}
   apiGateway:
     binaryMediaTypes:
@@ -42,3 +45,9 @@ functions:
       - http:
           path: image
           method: post
+
+custom:
+  datadog:
+    addLayers: true
+    apiKey: ${env:DD_API_KEY}
+    flushMetricsToLogs: false

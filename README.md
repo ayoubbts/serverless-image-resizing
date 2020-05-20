@@ -4,8 +4,8 @@ The goal of this project is to integrate the code of the following application i
 
 DevOps technical test with:
 
-- __logs__: AWS CloudWatch (Datadog very soon)
-- __tracing__: AWS X-Ray (Datadog very soon)
+- __logs__: AWS CloudWatch & Datadog
+- __tracing__: AWS X-Ray & Datadog
 - __deployment framework__: Serverless Framework
 - __CI/CD__: Docker
 - __auth__: forthcoming
@@ -72,9 +72,7 @@ Let's upload an image so we have something to work with.
 You can use curl as below or even POSTMAN!
 
 ```bash
-$ curl --location --request POST 'https://cdcov2ay1g.execute-api.eu-west-3.amazonaws.com/dev/image' \
---form 'file=@postgresql.png' \
---form 's3Key=postgresql.png'
+$ curl -X POST -F 'file=@postgresql.png' -F 's3Key=postgresql.png' https://cdcov2ay1g.execute-api.eu-west-3.amazonaws.com/dev/image
 ```
 
 Example 1:

@@ -11,6 +11,7 @@ RUN yum -y install nodejs
 # Install serverless
 RUN npm install -g serverless
 RUN npm install --save-dev serverless-plugin-tracing
+RUN npm install --save-dev serverless-plugin-datadog
 
 # Copy source
 COPY . .
