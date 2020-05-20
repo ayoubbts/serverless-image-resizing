@@ -49,6 +49,7 @@ SLS_SECRET=YOUR_AWS_SECRET_KEY
 STAGE=dev
 REGION=eu-west-3
 S3_BUCKET=ayoub-dynamic-image-resizing
+DD_API_KEY=YOUR_DD_API_KEY
 ```
 * Do never, ever, ever commit this file!
 
