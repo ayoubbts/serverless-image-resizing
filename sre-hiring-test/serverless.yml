@@ -22,6 +22,9 @@ provider:
   environment:
     S3_BUCKET: ${env:S3_BUCKET}
     REGION: ${env:REGION}
+    AUTH_USERNAME: ${env:AUTH_USERNAME}
+    AUTH_PASSWORD: ${env:AUTH_PASSWORD}
+
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -45,9 +48,28 @@ functions:
       - http:
           path: image
           method: post
+          authorizer:
+            name: basicAuth
+            resultTtlInSeconds: 0
+            identitySource: method.request.header.Authorization
+            type: request
+  basicAuth:
+    handler: auth.handler
 
 custom:
   datadog:
     addLayers: true
     apiKey: ${env:DD_API_KEY}
     flushMetricsToLogs: false
+
+resources:
+  Resources:
+    GatewayResponse:
+      Type: AWS::ApiGateway::GatewayResponse
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.WWW-Authenticate: "'Basic'"
+        ResponseType: UNAUTHORIZED
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        StatusCode: '401'

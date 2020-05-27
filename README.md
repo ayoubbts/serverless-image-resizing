@@ -8,7 +8,7 @@ DevOps technical test with:
 - __tracing__: AWS X-Ray & Datadog
 - __deployment framework__: Serverless Framework
 - __CI/CD__: Docker
-- __auth__: forthcoming
+- __auth__: Basic auth with username and password
 
 ## Getting Started
 
@@ -49,6 +49,8 @@ SLS_SECRET=YOUR_AWS_SECRET_KEY
 STAGE=dev
 REGION=eu-west-3
 S3_BUCKET=ayoub-dynamic-image-resizing
+AUTH_USERNAME=YOUR_AUTH_USERNAME
+AUTH_PASSWORD=YOUR_AUTH_PASSWORD
 ```
 * Do never, ever, ever commit this file!
 
@@ -72,7 +74,7 @@ Let's upload an image so we have something to work with.
 You can use curl as below or even POSTMAN!
 
 ```bash
-$ curl -X POST -F 'file=@postgresql.png' -F 's3Key=postgresql.png' https://cdcov2ay1g.execute-api.eu-west-3.amazonaws.com/dev/image
+$ curl -L -X POST -H 'Authorization: Basic YOUR_AUTHORIZATION_HEADER' -F 'file=@postgresql.png' -F 's3Key=postgresql.png' https://cdcov2ay1g.execute-api.eu-west-3.amazonaws.com/dev/image
 ```
 
 Example 1:
